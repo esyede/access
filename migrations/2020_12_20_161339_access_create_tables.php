@@ -14,11 +14,6 @@ class Access_Create_Tables
         $this->prefix = $prefix;
     }
 
-    /**
-     * Make changes to the database.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create($this->prefix.'permissions', function ($table) {
@@ -82,11 +77,6 @@ class Access_Create_Tables
         ]);
     }
 
-    /**
-     * Revert the changes to the database.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::drop_if_exists($this->prefix.'permission_role');

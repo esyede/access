@@ -4,11 +4,7 @@ namespace Esyede\Access\Libraries;
 
 defined('DS') or exit('No direct script access.');
 
-use Arr;
-use Authenticator;
-use Hash;
-
-class Access extends Authenticator
+class Access extends \Authenticator
 {
     public function __construct()
     {
@@ -27,8 +23,8 @@ class Access extends Authenticator
     {
         $valid = false;
 
-        $fields = Config::get('access::access.username');
-        $fields = Arr::wrap($fields);
+        $fields = \Config::get('access::access.column');
+        $fields = \Arr::wrap($fields);
 
         foreach ($fields as $field) {
             $user = $this->model()
@@ -36,7 +32,7 @@ class Access extends Authenticator
                 ->first();
 
             if (! is_null($user)) {
-                if (! Hash::check(Arr::get($arguments, 'password'), $user->password)) {
+                if (! \Hash::check(Arr::get($arguments, 'password'), $user->password)) {
                     throw new Exceptions\WrongPassword('User password is incorrect');
                 }
 
@@ -58,40 +54,40 @@ class Access extends Authenticator
         }
 
         if ($valid) {
-            return $this->login($user->get_key(), Arr::get($arguments, 'remember'));
+            return $this->login($user->get_key(), \Arr::get($arguments, 'remember'));
         }
         throw new Exceptions\UserNotFound('User can not be found');
     }
 
     protected function model()
     {
-        $model = Config::get('access::access.model');
+        $model = \Config::get('access::access.model');
 
-        return new $model();
+        return is_null($model) ? null : new $model();
     }
 
     public function is($roles, $user = null)
     {
-        $user = $this->getUser($user);
+        $user = $this->populate($user);
 
         return is_null($user) ? false : $user->is($roles);
     }
 
     public function can($permissions, $user = null)
     {
-        $user = $this->getUser($user);
+        $user = $this->populate($user);
 
         return is_null($user) ? false : $user->can($permissions);
     }
 
     public function level($level, $modifier = '>=', $user = null)
     {
-        $user = $this->getUser($user);
+        $user = $this->populate($user);
 
         return is_null($user) ? false : $user->level($level, $modifier);
     }
 
-    private function getUser($user = null)
+    private function populate($user = null)
     {
         if (! is_null($user)) {
             if (is_numeric($user)) {

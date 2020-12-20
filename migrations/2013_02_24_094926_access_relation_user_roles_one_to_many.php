@@ -14,11 +14,6 @@ class Access_Relation_User_Roles_One_To_Many
         $this->prefix = $prefix;
     }
 
-    /**
-     * Make changes to the database.
-     *
-     * @return void
-     */
     public function up()
     {
         $prefix = $this->prefix;
@@ -51,11 +46,6 @@ class Access_Relation_User_Roles_One_To_Many
         });
     }
 
-    /**
-     * Revert the changes to the database.
-     *
-     * @return void
-     */
     public function down()
     {
         $prefix = $this->prefix;
