@@ -102,7 +102,7 @@ $role->permissions()->sync([$permission->id]);
 
 
 // Buat user baru
-$user = new \Esyede\Access\Models\User;
+$user = new User();
 $user->username = 'esyede';
 $user->email = 'esyede@situsku.com';
 $user->password = 'password'; // password akan otomatis terenkripsi
