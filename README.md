@@ -43,7 +43,7 @@ lengkap dengan sampel user bernama **admin**, dengan kata sandi **password**.
 
 ### Penggunaan
 
-The package is intentionally lightweight. You add Users, Roles and Permissions like any other Model.
+Paket ini sengaja dibuat sangat sederhana. Anda tinggal menambahkan Users, Roles dan Permissions like seperti menambahkan record ke Model pada umumnya.
 
 ```php
 use Esyede\Access\Models\User;
