@@ -60,8 +60,8 @@ class Access_Create_Tables
         DB::table($this->prefix.'roles')->insert([
             'name' => Config::get('access::access.superadmin'),
             'level' => 10,
-            'created_at' => Date::now(),
-            'updated_at' => Date::now(),
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
         ]);
 
         DB::table($this->prefix.'users')->insert([
@@ -69,8 +69,8 @@ class Access_Create_Tables
             'password' => Hash::make('password'),
             'role_id' => 1,
             'email' => 'admin@situsku.com',
-            'created_at' => Date::now(),
-            'updated_at' => Date::now(),
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
             'verified' => 1,
             'disabled' => 0,
             'deleted' => 0,

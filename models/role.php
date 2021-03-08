@@ -6,12 +6,12 @@ defined('DS') or exit('No direct script access.');
 
 class Role extends Model
 {
-    public static $accessible = ['name', 'description', 'level'];
+    public static $fillable = ['name', 'description', 'level'];
 
     public function users()
     {
         return $this->has_many_and_belongs_to(
-            '\Esyede\Access\Models\User',
+            __NAMESPACE__.'\User',
             $this->prefix.'role_user'
         );
     }
@@ -19,7 +19,7 @@ class Role extends Model
     public function permissions()
     {
         return $this->has_many_and_belongs_to(
-            '\Esyede\Access\Models\Permission',
+            __NAMESPACE__.'\Permission',
             $this->prefix.'permission_role'
         );
     }

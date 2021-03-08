@@ -4,7 +4,7 @@ namespace Esyede\Access\Exceptions;
 
 defined('DS') or exit('No direct script access.');
 
-class UserDeleted extends \Exception
+class UserDeleted extends AccessException
 {
     // ..
 }

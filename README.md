@@ -23,7 +23,7 @@ php rakit package:install access
 Tambahkan kode berikut ke file `application/packages.php`:
 
 ```php
-'access' => ['autostart' => true],
+'access' => ['autoboot' => true],
 ```
 
 Lalu ubah Auth driver menjadi `'access'` di file `application/config/auth.php`:
@@ -43,7 +43,8 @@ lengkap dengan sampel user bernama **admin**, dengan kata sandi **password**.
 
 ### Penggunaan
 
-Paket ini sengaja dibuat sangat sederhana. Anda tinggal menambahkan Users, Roles dan Permissions like seperti menambahkan record ke Model pada umumnya.
+Paket ini sengaja dibuat sangat sederhana. Anda tinggal menambahkan
+Users, Roles dan Permissions seperti menambahkan record ke Model pada umumnya.
 
 ```php
 use Esyede\Access\Models\User;
@@ -59,16 +60,17 @@ $role = new Role();
 $permission = new Permission();
 ```
 
-Seluruh model berada di namespace `Esyede\Access\Models` sehingga tidak akan bercampur dengan model anda.
+Seluruh model berada di namespace `Esyede\Access\Models` sehingga
+tidak akan bercampur dengan model anda.
 
 
 
 Relasi tabel-tabelnya adalah sebagai berikut:
 
-  - Roles has_many dan belongs_to ke Users
-  - Users has_many dan belongs_to ke Roles
-  - Roles has_many dan belongs_to ke Permissions
-  - Permissions has_many dan belongs_to ke Roles
+  - Roles _has-many_ dan _belongs-to_ ke Users
+  - Users _has-many_ dan _belongs-to_ ke Roles
+  - Roles _has-many_ dan _belongs-to_ ke Permissions
+  - Permissions _has-many_ dan _belongs-to_ ke Roles
 
 Relasi - relasi ini juga ditangani via ORM:
 
@@ -77,51 +79,69 @@ $role->permissions()->sync([$permission->id]);
 ```
 
 
-Informasi lebih lanjut mengenai relasi bisa dibaca di [dokumentasi database](https://rakit.esyede.my.id/docs/database/facile).
+Informasi lebih lanjut mengenai relasi bisa dibaca
+di [dokumentasi database](https://rakit.esyede.my.id/docs/database/facile).
 
 
 
 ### Contoh Sederhana
 
+Buat permission baru:
+
 ```php
-// Buat permission baru
 $permission = new Permission();
 $permission->name = 'delete_user';
 $permission->save();
+```
 
+Buat role baru dengan level 7:
 
-// Buat role baru dengan level 7
+```php
 $role = new Role();
 $role->name = 'Moderator';
 $role->level = 7;
 $role->save();
+```
 
 
-// Assign permission ke role
+Assign permission ke role:
+
+```php
 $role->permissions()->sync([$permission->id]);
+```
 
 
-// Buat user baru
+Buat user baru:
+
+```php
 $user = new User();
 $user->username = 'esyede';
 $user->email = 'esyede@situsku.com';
-$user->password = 'password'; // password akan otomatis terenkripsi
+$user->password = 'password'; // Password akan otomatis di-hash, tdak perlu hash manual.
 $user->save();
+```
 
 
-// Assign role ke user
+Assign role ke user:
+
+```php
 $user->roles()->sync([$role->id]);
+```
 
 
-// Lakukan pemeriksaan ke user
-dump($user->is('Moderator'));    // true
-dump($user->is('Admin'));        // false
+Lakukan pemeriksaan ke user:
+
+```php
+dump($user->is('Moderator')); // true
+dump($user->is('Admin'));     // false
+
 
 dump($user->can('delete_user')); // true
 dump($user->can('add_user'));    // false
 
-dump($user->level(7));          // true
-dump($user->level(5, '<='));    // false
+
+dump($user->level(7));       // true
+dump($user->level(5, '<=')); // false
 ```
 
 

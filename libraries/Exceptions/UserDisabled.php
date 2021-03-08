@@ -4,7 +4,7 @@ namespace Esyede\Access\Exceptions;
 
 defined('DS') or exit('No direct script access.');
 
-class UserDisabled extends \Exception
+class UserDisabled extends AccessException
 {
     // ..
 }

@@ -4,6 +4,10 @@ namespace Esyede\Access\Libraries;
 
 defined('DS') or exit('No direct script access.');
 
+use Arr;
+use Hash;
+use Config;
+
 class Access extends \Authenticator
 {
     public function __construct()
@@ -23,8 +27,8 @@ class Access extends \Authenticator
     {
         $valid = false;
 
-        $fields = \Config::get('access::access.column');
-        $fields = \Arr::wrap($fields);
+        $fields = Config::get('access::access.column');
+        $fields = Arr::wrap($fields);
 
         foreach ($fields as $field) {
             $user = $this->model()
@@ -32,7 +36,7 @@ class Access extends \Authenticator
                 ->first();
 
             if (! is_null($user)) {
-                if (! \Hash::check(Arr::get($arguments, 'password'), $user->password)) {
+                if (! Hash::check(Arr::get($arguments, 'password'), $user->password)) {
                     throw new Exceptions\WrongPassword('User password is incorrect');
                 }
 
@@ -61,7 +65,7 @@ class Access extends \Authenticator
 
     protected function model()
     {
-        $model = \Config::get('access::access.model');
+        $model = Config::get('access::access.model');
 
         return is_null($model) ? null : new $model();
     }

@@ -7,7 +7,7 @@ defined('DS') or exit('No direct script access.');
 class User extends Model
 {
     public static $cache;
-    public static $accessible = [
+    public static $fillable = [
         'username',
         'password',
         'salt',
@@ -21,20 +21,20 @@ class User extends Model
     public function roles()
     {
         return $this->has_many_and_belongs_to(
-            '\Esyede\Access\Models\Role',
+            __NAMESPACE__.'\Role',
             $this->prefix.'role_user'
         );
     }
 
     public function set_password($password)
     {
-        $this->set_attribute('password', \Hash::make($hashed));
+        $this->set_attribute('password', Hash::make($hashed));
     }
 
     public function can($permissions)
     {
-        $permissions = \Arr::wrap($permissions);
-        $superadmin = \Config::get('access::access.superadmin');
+        $permissions = Arr::wrap($permissions);
+        $superadmin = Config::get('access::access.superadmin');
         $cache = static::cache();
 
         foreach ($cache->roles as $role) {
@@ -63,8 +63,8 @@ class User extends Model
 
     public function is($roles)
     {
-        $roles = \Arr::wrap($roles);
-        $superadmin = \Config::get('access::access.superadmin');
+        $roles = Arr::wrap($roles);
+        $superadmin = Config::get('access::access.superadmin');
         $cache = static::cache();
 
         $valid = false;
@@ -110,13 +110,10 @@ class User extends Model
         }
 
         $class = get_class($this);
-        $cache = new $class();
-        $cache = $class::with(['roles', 'roles.permissions'])
-            ->where('id', '=', $this->get_attribute('id'))
+        static::$cache = $class::with(['roles', 'roles.permissions'])
+            ->where_id($this->get_attribute('id'))
             ->first();
 
-        static::$cache = $cache;
-
-        return $cache;
+        return static::$cache;
     }
 }
