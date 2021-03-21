@@ -58,7 +58,7 @@ class Access extends \Authenticator
         }
 
         if ($valid) {
-            return $this->login($user->get_key(), \Arr::get($arguments, 'remember'));
+            return $this->login($user->get_key(), Arr::get($arguments, 'remember'));
         }
         throw new Exceptions\UserNotFound('User can not be found');
     }
