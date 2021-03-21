@@ -4,6 +4,10 @@ namespace Esyede\Access\Models;
 
 defined('DS') or exit('No direct script access.');
 
+use Arr;
+use Config;
+use Hash;
+
 class User extends Model
 {
     public static $cache;
