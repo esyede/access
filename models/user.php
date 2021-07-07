@@ -32,7 +32,7 @@ class User extends Model
 
     public function set_password($password)
     {
-        $this->set_attribute('password', Hash::make($hashed));
+        $this->set_attribute('password', Hash::make($password));
     }
 
     public function can($permissions)
