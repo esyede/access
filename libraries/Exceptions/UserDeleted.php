@@ -1,6 +1,6 @@
 <?php
 
-namespace Esyede\Access\Exceptions;
+namespace Esyede\Access\Libraries\Exceptions;
 
 defined('DS') or exit('No direct script access.');
 

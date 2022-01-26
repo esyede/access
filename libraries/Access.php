@@ -4,15 +4,20 @@ namespace Esyede\Access\Libraries;
 
 defined('DS') or exit('No direct script access.');
 
-use Arr;
-use Hash;
-use Config;
+use System\Arr;
+use System\Hash;
+use System\Lang;
+use System\Config;
+use System\Auth\Drivers\Driver;
 
-class Access extends \Authenticator
+class Access extends Driver
 {
+    private $language;
+
     public function __construct()
     {
         parent::__construct();
+        $this->language = Config::get('access::access.language');
         $this->user();
     }
 
@@ -26,41 +31,41 @@ class Access extends \Authenticator
     public function attempt($arguments = [])
     {
         $valid = false;
+        $field = Config::get('auth.username');
 
-        $fields = Config::get('access::access.column');
-        $fields = Arr::wrap($fields);
+        $user = $this->model()->where($field, '=', Arr::get($arguments, $field))->first();
 
-        foreach ($fields as $field) {
-            $user = $this->model()
-                ->where($field, '=', Arr::get($arguments, $field))
-                ->first();
-
-            if (! is_null($user)) {
-                if (! Hash::check(Arr::get($arguments, 'password'), $user->password)) {
-                    throw new Exceptions\WrongPassword('User password is incorrect');
-                }
-
-                if (! $user->verified) {
-                    throw new Exceptions\UserUnverified('User is unverified');
-                }
-
-                if ($user->disabled) {
-                    throw new Exceptions\UserDisabled('User is disabled');
-                }
-
-                if ($user->deleted) {
-                    throw new Exceptions\UserDeleted('User is deleted');
-                }
-
-                $valid = true;
-                break;
-            }
+        if (is_null($user)) {
+            throw new Exceptions\UserNotFound(
+                Lang::line('access::defaults.user_notfound', [], $this->language)
+            );
         }
 
-        if ($valid) {
-            return $this->login($user->get_key(), Arr::get($arguments, 'remember'));
+        if (! Hash::check(Arr::get($arguments, 'password'), $user->password)) {
+            throw new Exceptions\WrongPassword(
+                Lang::line('access::defaults.wrong_password', [], $this->language)
+            );
         }
-        throw new Exceptions\UserNotFound('User can not be found');
+
+        if (! $user->verified) {
+            throw new Exceptions\UserUnverified(
+                Lang::line('access::defaults.unverified_user', [], $this->language)
+            );
+        }
+
+        if ($user->disabled) {
+            throw new Exceptions\UserDisabled(
+                Lang::line('access::defaults.disabled_user', [], $this->language)
+            );
+        }
+
+        if ($user->deleted) {
+            throw new Exceptions\UserDeleted(
+                Lang::line('access::defaults.deleted_user', [], $this->language)
+            );
+        }
+
+        return $this->login($user->get_key(), Arr::get($arguments, 'remember'));
     }
 
     protected function model()

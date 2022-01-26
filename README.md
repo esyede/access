@@ -46,6 +46,11 @@ lengkap dengan sampel user bernama **admin**, dengan kata sandi **password**.
 Paket ini sengaja dibuat sangat sederhana. Anda tinggal menambahkan
 Users, Roles dan Permissions seperti menambahkan record ke Model pada umumnya.
 
+Secara default, sudah disesiakan 3 buah tipe akses yaitu:
+  - Admin
+  - Staff
+  - Member
+
 ```php
 use Esyede\Access\Models\User;
 use Esyede\Access\Models\Role;
@@ -67,12 +72,12 @@ tidak akan bercampur dengan model anda.
 
 Relasi tabel-tabelnya adalah sebagai berikut:
 
-  - Roles _has-many_ dan _belongs-to_ ke Users
-  - Users _has-many_ dan _belongs-to_ ke Roles
-  - Roles _has-many_ dan _belongs-to_ ke Permissions
-  - Permissions _has-many_ dan _belongs-to_ ke Roles
+  - Roles _belongs-to-many_ ke Users
+  - Users _belongs-to-many_ ke Roles
+  - Roles _belongs-to-many_ ke Permissions
+  - Permissions _belongs-to-many_ ke Roles
 
-Relasi - relasi ini juga ditangani via ORM:
+Relasi - relasi ini juga ditangani via Facile ORM:
 
 ```php
 $role->permissions()->sync([$permission->id]);
@@ -90,7 +95,9 @@ Buat permission baru:
 
 ```php
 $permission = new Permission();
-$permission->name = 'delete_user';
+$permission->name = 'Delete User';
+$permission->slug = 'delete-user';
+$permission->description = 'Allow to delete users';
 $permission->save();
 ```
 
@@ -98,7 +105,9 @@ Buat role baru dengan level 7:
 
 ```php
 $role = new Role();
-$role->name = 'Moderator';
+$role->name = 'Moderator Role';
+$role->slug = 'moderator-role';
+$role->deletable = true;
 $role->level = 7;
 $role->save();
 ```
@@ -115,8 +124,8 @@ Buat user baru:
 
 ```php
 $user = new User();
-$user->username = 'esyede';
-$user->email = 'esyede@situsku.com';
+$user->username = 'moderator';
+$user->email = 'moderator@gmail.com';
 $user->password = 'password'; // Password akan otomatis di-hash, tdak perlu hash manual.
 $user->save();
 ```
@@ -132,12 +141,12 @@ $user->roles()->sync([$role->id]);
 Lakukan pemeriksaan ke user:
 
 ```php
-dump($user->is('Moderator')); // true
-dump($user->is('Admin'));     // false
+dump($user->has_role('moderator-role')); // true
+dump($user->has_role('admin-role'));     // false
 
 
-dump($user->can('delete_user')); // true
-dump($user->can('add_user'));    // false
+dump($user->can('delete-user')); // true
+dump($user->can('add-user'));    // false
 
 
 dump($user->level(7));       // true

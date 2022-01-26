@@ -12,20 +12,20 @@ class User extends Model
 {
     public static $cache;
     public static $fillable = [
+        'fullname',
         'username',
         'password',
-        'salt',
         'email',
         'role_id',
-        'verified',
-        'deleted',
-        'disabled',
+        'verified_at',
+        'deleted_at',
+        'disabled_at',
     ];
 
     public function roles()
     {
-        return $this->has_many_and_belongs_to(
-            __NAMESPACE__.'\Role',
+        return $this->belongs_to_many(
+           '\Esyede\Access\Models\Role',
             $this->prefix.'role_user'
         );
     }
@@ -38,11 +38,10 @@ class User extends Model
     public function can($permissions)
     {
         $permissions = Arr::wrap($permissions);
-        $superadmin = Config::get('access::access.superadmin');
         $cache = static::cache();
 
         foreach ($cache->roles as $role) {
-            if ($role->name === $superadmin) {
+            if ($role->slug === 'admin') {
                 return true;
             }
         }
@@ -51,7 +50,8 @@ class User extends Model
 
         foreach ($cache->roles as $role) {
             foreach ($role->permissions as $permission) {
-                if (in_array($permission->name, $permissions)) {
+                if (in_array($permission->slug, $permissions)
+                || in_array($permission->name, $permissions)) {
                     $valid = true;
                     break;
                 }
@@ -68,13 +68,14 @@ class User extends Model
     public function is($roles)
     {
         $roles = Arr::wrap($roles);
-        $superadmin = Config::get('access::access.superadmin');
         $cache = static::cache();
 
         $valid = false;
 
         foreach ($cache->roles as $role) {
-            if (in_array($role->name, $roles) || $role->name === $superadmin) {
+            if (in_array($role->slug, $roles)
+            || in_array($role->name, $roles)
+            || $role->slug === 'admin') {
                 $valid = true;
                 break;
             }

@@ -4,6 +4,9 @@ namespace Esyede\Access\Models;
 
 defined('DS') or exit('No direct script access.');
 
+use Facile;
+use Config;
+
 class Model extends Facile
 {
     protected $prefix;
