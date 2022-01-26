@@ -75,11 +75,11 @@ class Access extends Driver
         return is_null($model) ? null : new $model();
     }
 
-    public function is($roles, $user = null)
+    public function has_role($roles, $user = null)
     {
         $user = $this->populate($user);
 
-        return is_null($user) ? false : $user->is($roles);
+        return is_null($user) ? false : $user->has_role($roles);
     }
 
     public function can($permissions, $user = null)
