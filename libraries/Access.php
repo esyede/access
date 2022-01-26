@@ -47,19 +47,19 @@ class Access extends Driver
             );
         }
 
-        if (! $user->verified) {
+        if (! $user->verified_at) {
             throw new Exceptions\UserUnverified(
                 Lang::line('access::defaults.unverified_user', [], $this->language)
             );
         }
 
-        if ($user->disabled) {
+        if ($user->disabled_at) {
             throw new Exceptions\UserDisabled(
                 Lang::line('access::defaults.disabled_user', [], $this->language)
             );
         }
 
-        if ($user->deleted) {
+        if ($user->deleted_at) {
             throw new Exceptions\UserDeleted(
                 Lang::line('access::defaults.deleted_user', [], $this->language)
             );
