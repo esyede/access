@@ -18,7 +18,7 @@ class Role extends Model
 
     public function set_slug($slug)
     {
-        $this->set_attribute('slug', Str::slug($password));
+        $this->set_attribute('slug', Str::slug($slug));
     }
 
     public function users()
