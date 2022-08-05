@@ -37,31 +37,31 @@ class Access extends Driver
 
         if (is_null($user)) {
             throw new Exceptions\UserNotFound(
-                Lang::line('access::defaults.user_notfound', [], $this->language)
+                Lang::line('access::defaults.user_notfound')->get($this->language)
             );
         }
 
         if (! Hash::check(Arr::get($arguments, 'password'), $user->password)) {
             throw new Exceptions\WrongPassword(
-                Lang::line('access::defaults.wrong_password', [], $this->language)
+                Lang::line('access::defaults.wrong_password')->get($this->language)
             );
         }
 
         if (! $user->verified_at) {
             throw new Exceptions\UserUnverified(
-                Lang::line('access::defaults.unverified_user', [], $this->language)
+                Lang::line('access::defaults.unverified_user')->get($this->language)
             );
         }
 
         if ($user->disabled_at) {
             throw new Exceptions\UserDisabled(
-                Lang::line('access::defaults.disabled_user', [], $this->language)
+                Lang::line('access::defaults.disabled_user')->get($this->language)
             );
         }
 
         if ($user->deleted_at) {
             throw new Exceptions\UserDeleted(
-                Lang::line('access::defaults.deleted_user', [], $this->language)
+                Lang::line('access::defaults.deleted_user')->get($this->language)
             );
         }
 
