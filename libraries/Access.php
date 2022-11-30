@@ -31,9 +31,7 @@ class Access extends Driver
     public function attempt($arguments = [])
     {
         $valid = false;
-        $field = Config::get('auth.username');
-
-        $user = $this->model()->where($field, '=', Arr::get($arguments, $field))->first();
+        $user = $this->model()->where('email', '=', Arr::get($arguments, 'email'))->first();
 
         if (is_null($user)) {
             throw new Exceptions\UserNotFound(
