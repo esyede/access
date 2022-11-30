@@ -19,8 +19,8 @@ class Access_Access_Seed_Roles_Table
     {
         $roles = [
             [
-                'name' => 'Admin Role',
-                'slug' => 'admin-role',
+                'name' => 'Administrator',
+                'slug' => 'admin',
                 'deletable' => 0,
                 'description' => 'Full access',
                 'level' => 10,
@@ -28,8 +28,8 @@ class Access_Access_Seed_Roles_Table
                 'updated_at' => Date::now(),
             ],
             [
-                'name' => 'Staff Role',
-                'slug' => 'staff-role',
+                'name' => 'Staff',
+                'slug' => 'staff',
                 'deletable' => 1,
                 'description' => 'Staff access',
                 'level' => 5,
@@ -37,8 +37,8 @@ class Access_Access_Seed_Roles_Table
                 'updated_at' => Date::now(),
             ],
             [
-                'name' => 'Member Role',
-                'slug' => 'member-role',
+                'name' => 'Member',
+                'slug' => 'member',
                 'deletable' => 1,
                 'description' => 'Member access',
                 'level' => 2,
