@@ -20,8 +20,7 @@ class Access_Access_Create_Users_Table
         Schema::create($this->prefix.'users', function ($table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('fullname', 191)->index();
-            $table->string('username', 30)->index();
+            $table->string('name', 191)->index();
             $table->string('password', 60)->index();
             $table->string('email', 191)->index();
             $table->integer('role_id')->unsigned()->index();
