@@ -28,7 +28,7 @@ class Access extends Driver
         }
     }
 
-    public function attempt($arguments = [])
+    public function attempt(array $arguments = [])
     {
         $valid = false;
         $user = $this->model()->where('email', '=', Arr::get($arguments, 'email'))->first();
@@ -69,28 +69,24 @@ class Access extends Driver
     protected function model()
     {
         $model = Config::get('access::access.model');
-
         return is_null($model) ? null : new $model();
     }
 
     public function has_role($roles, $user = null)
     {
         $user = $this->populate($user);
-
         return is_null($user) ? false : $user->has_role($roles);
     }
 
     public function can($permissions, $user = null)
     {
         $user = $this->populate($user);
-
         return is_null($user) ? false : $user->can($permissions);
     }
 
     public function level($level, $modifier = '>=', $user = null)
     {
         $user = $this->populate($user);
-
         return is_null($user) ? false : $user->level($level, $modifier);
     }
 
