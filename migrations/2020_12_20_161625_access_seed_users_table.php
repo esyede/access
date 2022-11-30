@@ -19,8 +19,7 @@ class Access_Access_Seed_Users_Table
     {
         $users = [
             [
-                'fullname' => 'Admin Account',
-                'username' => 'admin',
+                'name' => 'Admin Account',
                 'password' => Hash::make('password'),
                 'role_id' => 1,
                 'email' => 'admin@gmail.com',
@@ -31,8 +30,7 @@ class Access_Access_Seed_Users_Table
                 'deleted_at' => null,
             ],
             [
-                'fullname' => 'Staff Account',
-                'username' => 'staff',
+                'name' => 'Staff Account',
                 'password' => Hash::make('password'),
                 'role_id' => 2,
                 'email' => 'staff@gmail.com',
@@ -43,8 +41,7 @@ class Access_Access_Seed_Users_Table
                 'deleted_at' => null,
             ],
             [
-                'fullname' => 'Member Account',
-                'username' => 'member',
+                'name' => 'Member Account',
                 'password' => Hash::make('password'),
                 'role_id' => 3,
                 'email' => 'member@gmail.com',
