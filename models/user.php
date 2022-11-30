@@ -12,8 +12,7 @@ class User extends Model
 {
     public static $cache;
     public static $fillable = [
-        'fullname',
-        'username',
+        'name',
         'password',
         'email',
         'role_id',
