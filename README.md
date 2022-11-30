@@ -105,8 +105,8 @@ Buat role baru dengan level 7:
 
 ```php
 $role = new Role();
-$role->name = 'Moderator Role';
-$role->slug = 'moderator-role';
+$role->name = 'Moderator';
+$role->slug = 'moderator';
 $role->deletable = true;
 $role->level = 7;
 $role->save();
@@ -141,8 +141,8 @@ $user->roles()->sync([$role->id]);
 Lakukan pemeriksaan ke user:
 
 ```php
-dump($user->has_role('moderator-role')); // true
-dump($user->has_role('admin-role'));     // false
+dump($user->has_role('moderator')); // true
+dump($user->has_role('admin'));     // false
 
 
 dump($user->can('delete-user')); // true
