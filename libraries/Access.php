@@ -75,7 +75,7 @@ class Access extends Driver
     public function has_role($roles, $user = null)
     {
         $user = $this->populate($user);
-        return is_null($user) ? false : $user->has_role($roles);
+        return is_null($user) ? false : $user->is($roles);
     }
 
     public function can($permissions, $user = null)

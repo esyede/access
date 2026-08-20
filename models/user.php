@@ -5,12 +5,17 @@ namespace Esyede\Access\Models;
 defined('DS') or exit('No direct script access.');
 
 use Arr;
-use Config;
 use Hash;
 
 class User extends Model
 {
-    public static $cache;
+    /**
+     * Cache role per user, dikunci dengan id user.
+     *
+     * @var array
+     */
+    public static $cache = [];
+
     public static $fillable = [
         'name',
         'password',
@@ -37,9 +42,9 @@ class User extends Model
     public function can($permissions)
     {
         $permissions = Arr::wrap($permissions);
-        $cache = static::cache();
+        $roles = $this->cached_roles();
 
-        foreach ($cache->roles as $role) {
+        foreach ($roles as $role) {
             if ($role->slug === 'admin') {
                 return true;
             }
@@ -47,8 +52,8 @@ class User extends Model
 
         $valid = false;
 
-        foreach ($cache->roles as $role) {
-            foreach ($role->permissions as $permission) {
+        foreach ($roles as $role) {
+            foreach ((array) $role->permissions as $permission) {
                 if (in_array($permission->slug, $permissions)
                 || in_array($permission->name, $permissions)) {
                     $valid = true;
@@ -67,11 +72,10 @@ class User extends Model
     public function is($roles)
     {
         $roles = Arr::wrap($roles);
-        $cache = static::cache();
 
         $valid = false;
 
-        foreach ($cache->roles as $role) {
+        foreach ($this->cached_roles() as $role) {
             if (in_array($role->slug, $roles)
             || in_array($role->name, $roles)
             || $role->slug === 'admin') {
@@ -85,13 +89,11 @@ class User extends Model
 
     public function level($level, $modifier = '>=')
     {
-        $cache = static::cache();
-
         $max = -1;
         $min = 100;
         $levels = [];
 
-        foreach ($cache->roles as $role) {
+        foreach ($this->cached_roles() as $role) {
             $max = ($role->level > $max) ? $role->level : $max;
             $min = ($role->level < $min) ? $role->level : $min;
             $levels[] = $role->level;
@@ -107,17 +109,29 @@ class User extends Model
         }
     }
 
-    private function cache()
+    /**
+     * Ambil daftar role milik user ini.
+     *
+     * Hasilnya disimpan per id user, bukan satu cache untuk semua user,
+     * agar pengecekan hak akses user berikutnya tidak memakai data user
+     * sebelumnya.
+     *
+     * @return array
+     */
+    private function cached_roles()
     {
-        if (static::$cache) {
-            return static::$cache;
+        $id = $this->get_attribute('id');
+
+        if (is_null($id)) {
+            return [];
         }
 
-        $class = get_class($this);
-        static::$cache = $class::with(['roles', 'roles.permissions'])
-            ->where_id($this->get_attribute('id'))
-            ->first();
+        if (!isset(static::$cache[$id])) {
+            $class = get_class($this);
+            $user = $class::with(['roles', 'roles.permissions'])->where_id($id)->first();
+            static::$cache[$id] = is_null($user) ? [] : (array) $user->roles;
+        }
 
-        return static::$cache;
+        return static::$cache[$id];
     }
 }
